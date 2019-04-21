@@ -1,4 +1,8 @@
 import numpy as np
+import sys
+import os
+PATH = os.getcwd() + '/src'
+sys.path.append(PATH)
 from floydwarshall import *
 from mmds import *
 
@@ -15,7 +19,7 @@ class Isomap() :
             assert isinstance(k_neighbors, int)
             self.k = k_neighbors
         return
-
+        
     def _build_graph(self, D) :
         if self.method == 'knn' :
             self._knn(D)
@@ -52,14 +56,14 @@ class Isomap() :
         self.graph[self.graph == np.inf] = 2.*m
         return
     
-    def fit(self, D, fill_inf = True) :
+    def fit(self, D, fill_inf = True, verbose = False) :
         'D is the matrix of initial pairwise distances '
         self._build_graph(D)
         if fill_inf :
             self._fill_inf()
         geodesic = self._call_FW()
         m = MMDS(self.n_components, self.niter)
-        m.fit(geodesic)
+        m.fit(geodesic, verbose=verbose)
         self.Zs, self.stress = m.Zs, m.stress
         self.X_transformed = np.array(self.Zs[-1])
         return

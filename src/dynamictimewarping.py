@@ -1,5 +1,9 @@
 import numpy as np
 import pandas as pd
+import sys
+import os
+PATH = os.getcwd() + '/src'
+sys.path.append(PATH)
 from utils import *
 
 class DTW() :
@@ -36,10 +40,3 @@ class DTW() :
                 self.dtw_[j, i] = val
         return self.dtw_
 
-if __name__ == "__main__":
-    data = pd.read_csv('./data/Sales_Transactions_Dataset_Weekly.csv')
-    data = data.drop(columns = ['Product_Code'])
-    data = data.values[:, :51]
-    dtw = DTW(distance = l1)
-    dtw.fit(data)
-    print(dtw.dtw_)
