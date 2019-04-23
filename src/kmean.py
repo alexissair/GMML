@@ -7,7 +7,7 @@ class KMeans() :
         return
 
     def kmeans_forgy(self, X):
-        nsamples, nfeatures = X.shape[0], X.shape[1]
+        nsamples, _ = X.shape[0], X.shape[1]
         self.clusters = np.zeros(nsamples)
         centroids = np.random.choice(range(nsamples), replace = True, size = self.k)
         self.centroids = X[centroids, :]
@@ -17,7 +17,7 @@ class KMeans() :
             j += 1
             for i in range(nsamples) :
                 self.clusters[i] = self._get_closest_centroid(X[i, :])
-            same = self._update_centroids()
+            same = self._update_centroids(X)
         return
     
     def _get_closest_centroid(self, sample) :
@@ -28,13 +28,13 @@ class KMeans() :
                 mini, ind =  r, i
         return ind
 
-    def _update_centroids(self) :
-        prev_centroids = self.centroids
+    def _update_centroids(self, X) :
+        prev_centroids = self.centroids.copy()
         same = False
         for l in range(self.k) :
             n_l = len(self.clusters[self.clusters == l])
-            self.centroids[l] = np.sum(self.clusters[self.clusters == l])/n_l
-        same = (prev_centroids.all() == self.centroids.all())
+            self.centroids[l] = np.sum(X[self.clusters == l, :], axis = 0)/n_l
+        same = np.array_equal(prev_centroids, self.centroids)
         return same
 
     def fit(self, X) :
