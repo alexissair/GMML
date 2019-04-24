@@ -53,7 +53,7 @@ class Isomap() :
     
     def _fill_inf(self) :
         m = max(self.graph[self.graph != np.inf])
-        self.graph[self.graph == np.inf] = 2.*m
+        self.graph[self.graph == np.inf] = 3.*m
         return
     
     def fit(self, D, fill_inf = True, verbose = False) :
