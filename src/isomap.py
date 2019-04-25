@@ -36,6 +36,8 @@ class Isomap() :
             self.adjacency[i,argsorted_i] = 1
         self.graph = self.adjacency * D
         self.graph[self.adjacency == 0] = np.inf
+        for i in range(self.graph.shape[0]):
+            self.graph[i,i] = 0
         return
 
     def _epsilon(self, D) :
@@ -46,24 +48,27 @@ class Isomap() :
         self.adjacency[D < self.epsilon * mean] = 1
         self.graph = self.adjacency * D
         self.graph[self.adjacency == 0] = np.inf
+        for i in range(self.graph.shape[0]):
+            self.graph[i,i] = 0
         return
     
     def _call_FW(self) :
         return FloydWarshall(self.graph)
     
-    def _fill_inf(self) :
-        m = max(self.graph[self.graph != np.inf])
-        self.graph[self.graph == np.inf] = 3.*m
+    def _fill_inf(self, X) :
+        m = max(X[X != np.inf])
+        X[X == np.inf] = m
         return
+    
     
     def fit(self, D, fill_inf = True, verbose = False) :
         'D is the matrix of initial pairwise distances '
         self._build_graph(D)
+        self.geodesic = self._call_FW()
         if fill_inf :
-            self._fill_inf()
-        geodesic = self._call_FW()
+            self._fill_inf(self.geodesic)
         m = MMDS(self.n_components, self.niter)
-        m.fit(geodesic, verbose=verbose)
+        m.fit(self.geodesic, verbose=verbose)
         self.Zs, self.stress = m.Zs, m.stress
         self.X_transformed = np.array(self.Zs[-1])
         return
