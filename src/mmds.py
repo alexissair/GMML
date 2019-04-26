@@ -39,6 +39,7 @@ class MMDS():
             Z = self._get_smacof_B(Z,D).dot(Z)/n
             self.Zs.append(Z)
             self.stress.append(np.sum(np.sum((D-self._dissimilarity_sqrt(Z))**2)))
+        # Normalize the stress
         self.stress[:] = [x/n**2 for x in self.stress]
         return
     

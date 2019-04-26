@@ -3,10 +3,12 @@ import numpy as np
 class KMeans() :
     def __init__(self, k, max_iter = 1000) :
         self.k = k
+        # max_iter is the maximum number of iterations the algo does if it has not converged yet
         self.max_iter = max_iter
         return
 
     def kmeans_forgy(self, X):
+        '''Forgy initialization consists in randomly chosing centroids at initialization'''
         nsamples, _ = X.shape[0], X.shape[1]
         self.clusters = np.zeros(nsamples)
         centroids = np.random.choice(range(nsamples), replace = True, size = self.k)
@@ -35,6 +37,7 @@ class KMeans() :
             n_l = len(self.clusters[self.clusters == l])
             self.centroids[l] = np.sum(X[self.clusters == l, :], axis = 0)/n_l
         same = np.array_equal(prev_centroids, self.centroids)
+        # same is a boolean which checks if the centroids have changed
         return same
 
     def fit(self, X) :

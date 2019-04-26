@@ -48,14 +48,17 @@ class Isomap() :
         self.adjacency[D < self.epsilon * mean] = 1
         self.graph = self.adjacency * D
         self.graph[self.adjacency == 0] = np.inf
+        # We set the distance from a point to itself to 0
         for i in range(self.graph.shape[0]):
             self.graph[i,i] = 0
         return
     
     def _call_FW(self) :
+        # We call FW on the graph we have just built
         return FloydWarshall(self.graph)
     
     def _fill_inf(self, X) :
+        # We fill the infinity values by the maximum value observed
         m = max(X[X != np.inf])
         X[X == np.inf] = m
         return
