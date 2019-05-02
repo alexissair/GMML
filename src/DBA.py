@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 '''
-
 from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
@@ -92,23 +91,12 @@ def squared_DTW(s,t,cost_mat,delta_mat):
 
 def fill_delta_mat_dtw(center, s, delta_mat):
     slim = delta_mat[:len(center),:len(s)]
-    np.subtract(center, s,out=slim)
+    np.subtract.outer(center, s,out=slim)
     np.square(slim, out=slim)
 
 def DBA_update(center, series, cost_mat, path_mat, delta_mat):
     options_argmin = [(-1, -1), (0, -1), (-1, 0)]
     updated_center = np.zeros(center.shape)
-
-
-
-
-
-
-
-
-
-
-
     n_elements = np.array(np.zeros(center.shape), dtype=int)
     center_length = len(center)
     for s in series:
@@ -183,8 +171,7 @@ def main():
 
         series.append(series_i)
     series = np.array(series)
-    print(series.shape)
-    print(series[0].shape)
+
     #plotting the synthetic data
     for s in series:
         plt.plot(range(0,len(s)), s)
@@ -198,22 +185,5 @@ def main():
     plt.plot(range(0,len(average_series)), average_series)
     plt.show()
 
-#if __name__ == "__main__":
-    # main()
-
-
 if __name__== "__main__":
-    t = np.arange(0, 10, 0.1)
-    series1 = np.cos(t)
-    series2 = np.cos(t + 0.75)
-    plt.plot(series1)
-    plt.plot(series2)
-    plt.show()
-    series = list()
-    series.append(series1)
-    series.append(series2)
-    series = np.array(series)
-    average = performDBA(series)
-    print(average.shape)
-    plt.plot(average)
-    plt.show()
+    main()
